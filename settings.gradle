@@ -6,8 +6,7 @@
 
 pluginManagement {
     repositories {
-        // Android Plugins yahan se download honge
-        google()
+        google()            // Android plugins yahan milenge
         mavenCentral()
         gradlePluginPortal()
     }
@@ -15,12 +14,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // Libraries yahan se download hongi
-        google()
+        google()            // Libraries yahan milengi
         mavenCentral()
     }
 }
 
-// Project ka naam aur app module ko shamil karna
+// Aapke project ka naam aur app folder
 rootProject.name = "Potato-APK-Builder"
 include ':app'
