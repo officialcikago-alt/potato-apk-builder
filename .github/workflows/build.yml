@@ -1,6 +1,6 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: FINAL VERIFIED APK BUILD (STRICT PATHS)
+# PURPOSE: AUTO-FIX GRADLE AND BUILD APK
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
@@ -23,18 +23,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # MainActivity mein website URL dalna
+      # [JADU STEP] Ye command missing .jar file ko asli source se download karegi
+      - name: Download Missing Gradle Wrapper Files
+        run: |
+          echo "Bhai, missing jar file download ho rahi hai..."
+          mkdir -p gradle/wrapper
+          curl -L https://github.com/gradle/gradle/raw/v8.2.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
+          curl -L https://github.com/gradle/gradle/raw/v8.2.0/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
+
       - name: Inject Website URL
         run: |
           sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" app/src/main/java/com/potatostore/myapp/MainActivity.java
 
-      # Permissions fix
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # ****************************************************************************
-      # REAL BUILD: Isme 3-5 minute lagenge. Agar 20 sec mein khatam ho, toh galat hai.
-      # ****************************************************************************
+      # REAL BUILD: Ab engine ko .jar file mil chuki hai, toh build start hogi
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
