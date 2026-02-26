@@ -1,6 +1,6 @@
 // ********************************************************************************
 // FILE: app/build.gradle
-// PURPOSE: ANDROID APPLICATION CONFIGURATION
+// PURPOSE: ANDROID APPLICATION CONFIGURATION (FIXED PLUGIN VERSION)
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 // ********************************************************************************
 
@@ -10,6 +10,7 @@ plugins {
 }
 
 android {
+    // Tumhara package name jo folder structure se match karta hai
     namespace 'com.potatostore.myapp'
     compileSdk 34
 
@@ -23,12 +24,14 @@ android {
 
     buildTypes {
         release {
+            // Debug build ke liye minify off rakha hai
             minifyEnabled false
         }
     }
 }
 
 dependencies {
+    // Basic UI components
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
