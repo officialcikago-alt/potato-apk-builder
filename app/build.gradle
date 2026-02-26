@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    // Ye tumhare folder path 'com/potatostore/myapp' se match hona chahiye
     namespace 'com.potatostore.myapp'
     compileSdk 34
 
@@ -23,8 +24,6 @@ android {
 }
 
 dependencies {
-    // Basic Android support libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
