@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    // Tumhara unique package name
+    // Tumhara package name jo folder structure se match karta hai
     namespace 'com.potatostore.myapp'
     compileSdk 34
 
@@ -24,14 +24,14 @@ android {
 
     buildTypes {
         release {
-            // Debug build ke liye minifyEnabled false rakha hai
+            // Debug build ke liye minify off rakha hai
             minifyEnabled false
         }
     }
 }
 
 dependencies {
-    // Basic Android UI libraries
+    // Basic UI components
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
