@@ -1,10 +1,16 @@
+// ********************************************************************************
+// FILE: app/build.gradle
+// PURPOSE: ANDROID APPLICATION CONFIGURATION
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
+// ********************************************************************************
+
 plugins {
-    // Isme version add kar di hai taaki plugin mil jaye
+    // Version '8.2.0' dalna zaruri hai taaki GitHub ise dhoond sake
     id 'com.android.application' version '8.2.0'
 }
 
 android {
+    // Tumhara unique package name
     namespace 'com.potatostore.myapp'
     compileSdk 34
 
@@ -18,13 +24,15 @@ android {
 
     buildTypes {
         release {
+            // Debug build ke liye minifyEnabled false rakha hai
             minifyEnabled false
         }
     }
 }
 
-// Zaruri dependencies
 dependencies {
+    // Basic Android UI libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
