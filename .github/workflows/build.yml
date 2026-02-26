@@ -1,6 +1,6 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: ASLI ANDROID APK BUILD (WITH AUTO-STRUCTURE FIXER)
+# PURPOSE: FULL AUTOMATIC ANDROID APK BUILD (FORCE STRUCTURE FIX)
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
@@ -17,18 +17,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # MAGIC STEP: Ye script bhatki hui files ko sahi raste par layegi
-      - name: Auto-Fix Folder Structure
+      # YEH HAI ASLI JADU: Files ko unki sahi jagah move karna
+      - name: Force Fix Project Structure
         run: |
-          echo "Bhai, files check ho rahi hain..."
-          # Galat path jahan files abhi hain
-          WRONG_PATH="app/src/main/java/com/potatostore/myapp"
+          echo "Bhai, files sahi raste par la raha hoon..."
+          # Wo path jahan tumne galti se files daal di hain (image_703aa3 ke hisaab se)
+          WRONG_DIR="app/src/main/java/com/potatostore/myapp"
           
-          # Files ko sahi jagah move karna agar wo galat jagah hain
-          [ -f "$WRONG_PATH/settings.gradle" ] && mv "$WRONG_PATH/settings.gradle" .
-          [ -f "$WRONG_PATH/gradlew" ] && mv "$WRONG_PATH/gradlew" .
-          [ -f "$WRONG_PATH/build.gradle" ] && mv "$WRONG_PATH/build.gradle" ./app/
-          [ -f "$WRONG_PATH/AndroidManifest.xml" ] && mkdir -p app/src/main && mv "$WRONG_PATH/AndroidManifest.xml" ./app/src/main/
+          # 1. Root files ko bahar nikaalo
+          [ -f "$WRONG_DIR/settings.gradle" ] && mv "$WRONG_DIR/settings.gradle" .
+          [ -f "$WRONG_DIR/gradlew" ] && mv "$WRONG_DIR/gradlew" .
+          
+          # 2. App level build file ko sahi jagah dalo
+          [ -f "$WRONG_DIR/build.gradle" ] && mv "$WRONG_DIR/build.gradle" ./app/
+          
+          # 3. Manifest ko sahi jagah dalo
+          mkdir -p app/src/main
+          [ -f "$WRONG_DIR/AndroidManifest.xml" ] && mv "$WRONG_DIR/AndroidManifest.xml" ./app/src/main/
+          
+          echo "Structure Fixed! Ab build shuru hogi."
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -39,17 +46,19 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # Website URL inject karna
+      # Website URL inject karna (Asli file path check karke)
       - name: Inject Website URL
         run: |
-          FILE_PATH="app/src/main/java/com/potatostore/myapp/MainActivity.java"
-          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" "$FILE_PATH"
+          TARGET_FILE="app/src/main/java/com/potatostore/myapp/MainActivity.java"
+          if [ -f "$TARGET_FILE" ]; then
+            sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" "$TARGET_FILE"
+          fi
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
       # ****************************************************************************
-      # ASLI BUILD: Isme 3-5 minute lagenge, cancel mat karna!
+      # REAL BUILD: Isme 3-5 minute lagenge (16 seconds nahi!)
       # ****************************************************************************
       - name: Build Real APK
         run: ./gradlew assembleDebug
