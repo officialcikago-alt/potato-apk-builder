@@ -1,12 +1,13 @@
 // ********************************************************************************
 // FILE: settings.gradle
-// PURPOSE: PLUGINS AUR REPOSITORIES KA RASTA DIKHANA
+// PURPOSE: PLUGINS AUR REPOSITORIES KA RASTA DIKHANA (FIX FOR PLUGIN NOT FOUND)
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 // ********************************************************************************
 
 pluginManagement {
     repositories {
-        google()            // Android plugins yahan milenge
+        // Bhai, yahan se Android plugins download honge
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -14,11 +15,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()            // Libraries yahan milengi
+        // Bhai, yahan se sari libraries download hongi
+        google()
         mavenCentral()
     }
 }
 
-// Aapke project ka naam aur app folder
+// Project ka naam aur app module ko shamil karna
 rootProject.name = "Potato-APK-Builder"
 include ':app'
