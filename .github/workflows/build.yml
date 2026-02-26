@@ -1,0 +1,38 @@
+# ********************************************************************************
+# FILE: .github/workflows/build.yml
+# PURPOSE: Website se command milte hi APK build karna
+# [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
+# ********************************************************************************
+
+name: Potato Cloud Build
+
+# Ye workflow tab chalega jab humari website se signal aayega
+on:
+  repository_dispatch:
+    types: [build_apk]
+
+jobs:
+  make-apk:
+    runs-on: ubuntu-latest # GitHub ka fast Linux server
+    
+    steps:
+      # Step 1: Repo ka sara code nikalna
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Java setup (Android build ke liye zaruri hai)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Yahan hum website se aane wale URL ko print kar rahe hain
+      - name: Log Target URL
+        run: |
+          echo "Bhai, is website ka APK banana hai: ${{ github.event.client_payload.url }}"
+          echo "App Name: ${{ github.event.client_payload.app_name }}"
+
+      # Step 4: Build Command (Abhi hum sirf check kar rahe hain ki workflow chal raha hai ya nahi)
+      - name: Build Status
+        run: echo "Build command initialized successfully for PotatoStore!"
