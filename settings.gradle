@@ -1,6 +1,12 @@
+// ********************************************************************************
+// FILE: settings.gradle
+// PURPOSE: REPOSITORIES AUR PLUGINS KA RASTA DIKHANA
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
+// ********************************************************************************
+
 pluginManagement {
     repositories {
+        // Plugins yahan se download honge
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -9,11 +15,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // Libraries yahan se download hongi
         google()
         mavenCentral()
     }
 }
 
-// Aapke app folder ka naam
+// Aapke project ka naam aur app module include karna
 rootProject.name = "Potato-APK-Builder"
 include ':app'
