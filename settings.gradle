@@ -1,7 +1,4 @@
-// ********************************************************************************
-// FILE: settings.gradle
-// [2026-02-06] Comment: Isme project ka naam define hota hai.
-// ********************************************************************************
-
+// [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
+// Is file mein hum project ka naam aur modules batate hain
 rootProject.name = "PotatoStoreApp"
 include ':app'
