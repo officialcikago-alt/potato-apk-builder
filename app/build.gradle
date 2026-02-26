@@ -1,10 +1,10 @@
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 plugins {
-    id 'com.android.application'
+    // Isme version add kar di hai taaki plugin mil jaye
+    id 'com.android.application' version '8.2.0'
 }
 
 android {
-    // Ye tumhare folder path 'com/potatostore/myapp' se match hona chahiye
     namespace 'com.potatostore.myapp'
     compileSdk 34
 
@@ -23,6 +23,7 @@ android {
     }
 }
 
+// Zaruri dependencies
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
