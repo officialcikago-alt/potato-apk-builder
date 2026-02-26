@@ -1,0 +1,7 @@
+// ********************************************************************************
+// FILE: settings.gradle
+// [2026-02-06] Comment: Isme project ka naam define hota hai.
+// ********************************************************************************
+
+rootProject.name = "PotatoStoreApp"
+include ':app'
