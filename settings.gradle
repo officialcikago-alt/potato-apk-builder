@@ -1,4 +1,19 @@
 // [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
-// Is file mein hum project ka naam aur modules batate hain
-rootProject.name = "PotatoStoreApp"
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Aapke app folder ka naam
+rootProject.name = "Potato-APK-Builder"
 include ':app'
