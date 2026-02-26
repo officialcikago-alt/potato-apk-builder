@@ -1,6 +1,6 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: AUTO-FIX GRADLE AND BUILD APK
+# PURPOSE: FULL AUTOMATIC APK BUILD (WITH AUTO-FIX FOR MISSING GRADLE)
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
@@ -23,25 +23,36 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # [JADU STEP] Ye command missing .jar file ko asli source se download karegi
-      - name: Download Missing Gradle Wrapper Files
+      # ****************************************************************************
+      # JADU STEP: Agar gradle-wrapper.jar delete kar di hai, toh ye asli file layega
+      #
+      # ****************************************************************************
+      - name: Force Fix Gradle Wrapper
         run: |
-          echo "Bhai, missing jar file download ho rahi hai..."
+          echo "Bhai, missing engine files download ho rahi hain..."
           mkdir -p gradle/wrapper
+          # Asli binary files download ho rahi hain jo manually nahi ban sakti
           curl -L https://github.com/gradle/gradle/raw/v8.2.0/gradle/wrapper/gradle-wrapper.jar -o gradle/wrapper/gradle-wrapper.jar
           curl -L https://github.com/gradle/gradle/raw/v8.2.0/gradle/wrapper/gradle-wrapper.properties -o gradle/wrapper/gradle-wrapper.properties
+          echo "Engine Fixed!"
 
+      # Website se aane wala URL MainActivity mein auto-insert ho raha hai
       - name: Inject Website URL
         run: |
           sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" app/src/main/java/com/potatostore/myapp/MainActivity.java
 
+      # gradlew file ko chalne ki permission dena
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      # REAL BUILD: Ab engine ko .jar file mil chuki hai, toh build start hogi
+      # ****************************************************************************
+      # REAL BUILD: Ab ye 12 second mein nahi rukega!
+      #
+      # ****************************************************************************
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
+      # Build khatam hone ke baad APK ko Artifacts mein upload karna
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
