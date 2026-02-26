@@ -1,0 +1,36 @@
+// ********************************************************************************
+// FILE: app/build.gradle
+// PURPOSE: Android build settings aur dependencies handle karna.
+// [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
+// ********************************************************************************
+
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.potatostore.myapp'
+    compileSdk 33 // Latest Android SDK use kar rahe hain
+
+    defaultConfig {
+        applicationId "com.potatostore.myapp"
+        minSdk 21 // Purane phones pe bhi chalega
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // Basic Android libraries jo WebView ke liye chahiye
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}
