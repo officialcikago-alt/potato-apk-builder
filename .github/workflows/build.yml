@@ -1,6 +1,6 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: REAL ANDROID APK COMPILATION (FIXED STRUCTURE)
+# PURPOSE: ASLI ANDROID APK BUILD (FINAL VERIFIED)
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
@@ -22,28 +22,26 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
+          cache: 'gradle'
 
-      # Website se aane wala URL MainActivity mein auto-insert ho raha hai
+      # MainActivity mein URL inject karna
       - name: Inject Website URL
         run: |
-          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" app/src/main/java/com/potatostore/myapp/MainActivity.java
+          FILE_PATH="app/src/main/java/com/potatostore/myapp/MainActivity.java"
+          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" "$FILE_PATH"
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
+      # GRADLEW PERMISSION: Ye sabse zaruri step hai
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       # ****************************************************************************
-      # ASLI BUILD COMMAND: Isme 3-5 minute lagenge
+      # REAL BUILD: Ab ye 12 second nahi balki 3-5 MINUTE chalega!
       # ****************************************************************************
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace
 
-      - name: Upload APK to Artifacts
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.client_payload.app_name }}-APK
           path: app/build/outputs/apk/debug/*.apk
-          retention-days: 7
