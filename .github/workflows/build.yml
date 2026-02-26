@@ -1,70 +1,61 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: REAL ANDROID APK COMPILATION (ASLI BUILD - FIXED VERSION)
+# PURPOSE: ASLI ANDROID APK BUILD (AUTOMATIC STRUCTURE FIX)
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
 name: Potato Cloud Build
 
-# Yeh workflow tab trigger hoga jab tumhari PotatoStore website se signal aayega
 on:
   repository_dispatch:
-    types: [build_apk] # Website se aane wala signal match hona chahiye
+    types: [build_apk]
 
 jobs:
   make-apk:
-    runs-on: ubuntu-latest # GitHub ka fast Linux machine use ho rahi hai
-    
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Tumhari repository ka sara code server par download karna
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2: Java (JDK 17) setup karna kyunki Android build ke liye ye zaruri hai
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle # Isse build agli baar fast hogi
 
-      # Step 3: Website se jo URL aaya hai, use MainActivity.java mein fit karna
+      # Step: Website URL ko MainActivity mein dalo
       - name: Inject Website URL
         run: |
           echo "Bhai, URL inject ho raha hai: ${{ github.event.client_payload.url }}"
-          # sed command purane placeholder URL ko asli URL se replace kar degi
-          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" app/src/main/java/com/potatostore/myapp/MainActivity.java
+          # Hum check kar rahe hain ki file sahi jagah hai ya nahi
+          FILE_PATH="app/src/main/java/com/potatostore/myapp/MainActivity.java"
+          if [ -f "$FILE_PATH" ]; then
+            sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" "$FILE_PATH"
+          else
+            echo "Error: MainActivity.java nahi mili!" && exit 1
+          fi
 
-      # Step 4: Android SDK aur build tools ko initialize karna (Fail se bachne ke liye)
-      - name: Initialize Android Build Tools
-        run: |
-          echo "Initializing SDK and Build Tools..."
-          mkdir -p ~/.android && touch ~/.android/repositories.cfg
-
-      # Step 5: Gradle Wrapper setup karna (Yahi asli build engine hai)
+      # Step: Gradle Setup (Isse asli engine start hoga)
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          gradle-version: current # Jo bhi latest version hai wo use hoga
+        uses: gradle/actions/setup-gradle@v3
 
-      # Step 6: Build command ko execute karne ki permission dena
+      # Step: Permission dena
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew || echo "Already has permission"
-
-      # ****************************************************************************
-      # Step 7: ASLI BUILD COMMAND - Sabse important step
-      # ****************************************************************************
-      - name: Build Debug APK
         run: |
-          echo "Bhai, thoda sabar karo, asli APK compile ho raha hai..."
-          # Is command se tumhara Android code asli APK file ban jayega
-          ./gradlew assembleDebug
+          if [ ! -f "gradlew" ]; then
+            gradle wrapper
+          fi
+          chmod +x gradlew
 
-      # Step 8: Build hone ke baad APK file ko download ke liye 'Artifacts' mein bhejna
-      - name: Upload APK to Artifacts
+      # ****************************************************************************
+      # Step: ASLI COMPILATION (Isme 4-5 minute lagenge, sabar rakhna!)
+      # ****************************************************************************
+      - name: Build Real APK
+        run: ./gradlew assembleDebug
+
+      # Step: APK ko Artifacts mein bhejona (Download link ke liye)
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          # Artifact ka naam wahi hoga jo tumne App ka naam rakha hai
           name: ${{ github.event.client_payload.app_name }}-APK
           path: app/build/outputs/apk/debug/*.apk
-          retention-days: 7 # Tumhare paas 7 din ka time rahega download karne ke liye
