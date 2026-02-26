@@ -1,6 +1,6 @@
 # ********************************************************************************
 # FILE: .github/workflows/build.yml
-# PURPOSE: ASLI ANDROID APK BUILD (FINAL VERIFIED)
+# PURPOSE: FINAL VERIFIED APK BUILD (STRICT PATHS)
 # [2026-02-06] Code ma bhar bhar ka comment use hona chayya.
 # ********************************************************************************
 
@@ -22,23 +22,21 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      # MainActivity mein URL inject karna
+      # MainActivity mein website URL dalna
       - name: Inject Website URL
         run: |
-          FILE_PATH="app/src/main/java/com/potatostore/myapp/MainActivity.java"
-          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" "$FILE_PATH"
+          sed -i "s|https://your-website-link.com|${{ github.event.client_payload.url }}|g" app/src/main/java/com/potatostore/myapp/MainActivity.java
 
-      # GRADLEW PERMISSION: Ye sabse zaruri step hai
-      - name: Grant execute permission for gradlew
+      # Permissions fix
+      - name: Grant execute permission
         run: chmod +x gradlew
 
       # ****************************************************************************
-      # REAL BUILD: Ab ye 12 second nahi balki 3-5 MINUTE chalega!
+      # REAL BUILD: Isme 3-5 minute lagenge. Agar 20 sec mein khatam ho, toh galat hai.
       # ****************************************************************************
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
